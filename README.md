@@ -304,60 +304,88 @@ class Score(Base):
 ## 🚀 Development Setup
 
 ### Prerequisites
-- Node.js 20+ and npm/pnpm
-- PostgreSQL (or use free Supabase instance)
+- Python 3.12+
+- PostgreSQL (using Neon serverless Postgres)
 - Git
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/yourusername/rolpraat-webapp.git
+git clone https://github.com/bamysoep/Rolpraat-webapp.git
 cd rolpraat-webapp
 ```
 
 ### 2. Backend Setup
 ```bash
-cd backend
-
 # Create virtual environment
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Create .env file
-cp .env.example .env
+# Create .env file with your Neon database URL
+echo "DATABASE_URL=postgresql+psycopg://user:password@host/dbname?sslmode=require" > .env
 
-# Edit .env with your database URL:
-# DATABASE_URL="postgresql://user:password@localhost:5432/rolpraat"
-# JWT_SECRET="your-super-secret-jwt-key"
-# JWT_ALGORITHM="HS256"
-# JWT_EXPIRE_MINUTES=1440
+# Initialize database tables
+python database/db.py
 
-# Run Alembic migrations
-alembic upgrade head
-
-# Start backend
-uvicorn app.main:app --reload  # Runs on http://localhost:8000
+# Start backend server
+cd backend/src
+PYTHONPATH=../.. uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### 3. Frontend Setup
-```bash
-cd ../frontend
-npm install
-
-# Create .env file
-echo "VITE_API_URL=http://localhost:8000/api" > .env
-
-# Start frontend
-npm run dev  # Runs on http://localhost:5173
-```
-
-### 4. Access Application
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:8000/api
+### 3. Access Application
+- Backend API: http://localhost:8000
 - API Docs (Swagger): http://localhost:8000/docs
 - Alternative Docs (ReDoc): http://localhost:8000/redoc
+- Health Check: http://localhost:8000/ (should return `{"status":"ok"}`)
+
+### 4. Development Tools
+
+#### Run Tests
+```bash
+# Run all tests
+PYTHONPATH=. pytest backend/tests/ -v
+
+# Run with coverage
+PYTHONPATH=. pytest backend/tests/ --cov=backend --cov-report=html
+```
+
+#### Code Quality
+```bash
+# Run linter
+ruff check backend/ database/
+
+# Auto-fix linting issues
+ruff check --fix backend/ database/
+
+# Format code
+ruff format backend/ database/
+
+# Check formatting
+ruff format --check backend/ database/
+```
+
+#### Available API Endpoints
+- `POST /users/` - Create a new user
+- `GET /users/` - List all users
+- `GET /users/{id}` - Get user by ID
+- `PUT /users/{id}` - Update user
+- `DELETE /users/{id}` - Delete user
+
+#### Testing with cURL
+```bash
+# Create a user
+curl -X POST http://localhost:8000/users/ \
+  -H "Content-Type: application/json" \
+  -d '{"name": "John Doe", "email": "john@example.com"}'
+
+# Get all users
+curl http://localhost:8000/users/
+
+# Get user by ID
+curl http://localhost:8000/users/1
+```
 
 ---
 

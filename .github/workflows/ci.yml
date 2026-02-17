@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main, setup, develop ]
+    branches: [ "**" ]  # Run on any branch
   pull_request:
     branches: [ main, develop ]
 
