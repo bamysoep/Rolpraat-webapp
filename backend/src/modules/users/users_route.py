@@ -1,7 +1,8 @@
+
 from fastapi import APIRouter
-from typing import List
+
 from . import users_controller as controller
-from .users_schema import UserCreate, UserUpdate, UserResponse
+from .users_schema import UserCreate, UserResponse, UserUpdate
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -12,7 +13,7 @@ def create_user(user: UserCreate):
     return controller.create_user(user)
 
 
-@router.get("/", response_model=List[UserResponse])
+@router.get("/", response_model=list[UserResponse])
 def get_users():
     """Get all users."""
     return controller.get_all_users()

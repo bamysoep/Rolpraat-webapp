@@ -1,6 +1,7 @@
+
 from database.db import Session
 from database.models import User
-from typing import List, Optional
+
 
 #example of create function, currently used in the implementation but can be expanded with error handling and validation in the future
 def create_user(name: str, email: str) -> User:
@@ -16,7 +17,7 @@ def create_user(name: str, email: str) -> User:
         session.close()
 
 #example of get all users function, currently used in the implementation but can be expanded with pagination or filtering in the future
-def get_all_users() -> List[User]:
+def get_all_users() -> list[User]:
     """Retrieve all users from database."""
     session = Session()
     try:
@@ -26,7 +27,7 @@ def get_all_users() -> List[User]:
         session.close()
 
 #example of get by id function, not used in current implementation but can be useful for future features
-def get_user_by_id(user_id: int) -> Optional[User]:
+def get_user_by_id(user_id: int) -> User | None:
     """Retrieve a user by their ID."""
     session = Session()
     try:
@@ -36,7 +37,7 @@ def get_user_by_id(user_id: int) -> Optional[User]:
         session.close()
 
 #example of get by email function, not used in current implementation but can be useful for future features
-def get_user_by_email(email: str) -> Optional[User]:
+def get_user_by_email(email: str) -> User | None:
     """Retrieve a user by their email."""
     session = Session()
     try:
@@ -46,7 +47,7 @@ def get_user_by_email(email: str) -> Optional[User]:
         session.close()
 
 #example of update function, not used in current implementation but can be useful for future features
-def update_user(user_id: int, name: Optional[str] = None, email: Optional[str] = None) -> Optional[User]:
+def update_user(user_id: int, name: str | None = None, email: str | None = None) -> User | None:
     """Update a user's information."""
     session = Session()
     try:

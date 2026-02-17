@@ -1,7 +1,8 @@
+
 from fastapi import HTTPException
-from typing import List
+
 from . import users_service as service
-from .users_schema import UserCreate, UserUpdate, UserResponse
+from .users_schema import UserCreate, UserResponse, UserUpdate
 
 
 def create_user(user_data: UserCreate) -> UserResponse:
@@ -10,7 +11,7 @@ def create_user(user_data: UserCreate) -> UserResponse:
     return UserResponse.model_validate(user)
 
 
-def get_all_users() -> List[UserResponse]:
+def get_all_users() -> list[UserResponse]:
     """Get all users."""
     users = service.get_all_users()
     return [UserResponse.model_validate(user) for user in users]
